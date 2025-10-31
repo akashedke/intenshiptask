@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tic-Tac-Toe Web Application</title>
+    <link rel="stylesheet" href="task03.css" />
+</head>
+<body>
+    <div class="game-container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="mode-select">
+            <label><input type="radio" name="mode" value="player" checked /> Two Players</label>
+            <label><input type="radio" name="mode" value="computer" /> Play vs Computer</label>
+        </div>
+        <div id="board" class="board">
+            <!-- 9 cells will be generated here -->
+        </div>
+        <div id="status" class="status"></div>
+        <button id="restart-btn">Restart Game</button>
+    </div>
+    <script>
+        const boardElement = document.getElementById('board');
+const statusElement = document.getElementById('status');
+const restartBtn = document.getElementById('restart-btn');
+const modeRadios = document.querySelectorAll('input[name="mode"]');
+
+let board;
+let currentPlayer;
+let gameActive;
+let againstComputer;
+
+const winningConditions = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+];
+
+function initializeGame() {
+    board = ["", "", "", "", "", "", "", "", ""];
+    currentPlayer = "X";
+    gameActive = true;
+    againstComputer = document.querySelector('input[name="mode"]:checked').value === 'computer';
+    statusElement.textContent = `Player ${currentPlayer}'s turn`;
+    boardElement.innerHTML = '';
+    for(let i=0; i<9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.setAttribute('data-index', i);
+        cell.addEventListener('click', onCellClick);
+        boardElement.appendChild(cell);
+    }
+}
+
+function onCellClick(e) {
+    const index = e.target.getAttribute('data-index');
+    if (!gameActive || board[index] !== "") return;
+
+    makeMove(index, currentPlayer);
+
+    if (againstComputer && gameActive) {
+        statusElement.textContent = `Computer's turn`;
+        setTimeout(() => {
+            computerMove();
+        }, 500);
+    }
+}
+
+function makeMove(index, player) {
+    board[index] = player;
+    const cell = boardElement.querySelector(`[data-index='${index}']`);
+    cell.textContent = player;
+    cell.classList.add('disabled');
+    checkResult();
+    if (gameActive) {
+        switchPlayer();
+        statusElement.textContent = `Player ${currentPlayer}'s turn`;
+    }
+}
+
+function switchPlayer() {
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+}
+
+function checkResult() {
+    let roundWon = false;
+    for (const condition of winningConditions) {
+        const [a, b, c] = condition;
+        if (board[a] === "" || board[b] === "" || board[c] === "") continue;
+        if (board[a] === board[b] && board[b] === board[c]) {
+            roundWon = true;
+            break;
+        }
+    }
+
+    if (roundWon) {
+        statusElement.textContent = `Player ${currentPlayer} wins!`;
+        gameActive = false;
+        disableBoard();
+        return;
+    }
+
+    if (!board.includes("")) {
+        statusElement.textContent = "It's a draw!";
+        gameActive = false;
+    }
+}
+
+function disableBoard() {
+    const cells = boardElement.querySelectorAll('.cell');
+    cells.forEach(cell => cell.classList.add('disabled'));
+}
+
+function computerMove() {
+    if (!gameActive) return;
+
+    // Simple AI: choose a random available cell.
+    const availableCells = board
+        .map((val, idx) => val === "" ? idx : null)
+        .filter(val => val !== null);
+
+    if (availableCells.length === 0) return;
+
+    const randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+    makeMove(randomIndex, currentPlayer);
+}
+
+restartBtn.addEventListener('click', initializeGame);
+modeRadios.forEach(radio => radio.addEventListener('change', initializeGame));
+
+// Initialize on page load
+initializeGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Navigation Menu</title>
+<link rel="stylesheet" href="task01.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">MyBrand</div>
+            <div class="mobile-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero" id="home">
+        <div>
+            <h1>Welcome to MyBrand</h1>
+            <p>Scroll down to see the navigation menu transform</p>
+        </div>
+    </div>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We are a creative agency dedicated to bringing your ideas to life. Our team of experienced professionals works tirelessly to deliver exceptional results that exceed expectations. With years of experience in the industry, we've helped countless clients achieve their goals.</p>
+    </section>
+
+    <section id="services">
+        <h2>Our Services</h2>
+        <p>We offer a comprehensive range of services including web design, brand development, digital marketing, and content creation. Each project is approached with creativity, attention to detail, and a commitment to excellence that sets us apart from the competition.</p>
+    </section>
+
+    <section id="portfolio">
+        <h2>Portfolio</h2>
+        <p>Take a look at some of our recent work. We've had the privilege of working with amazing clients across various industries, creating memorable experiences and delivering measurable results. Our portfolio showcases the diversity and quality of our work.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Ready to start your next project? Get in touch with us today! We'd love to hear about your ideas and discuss how we can help bring them to reality. Our team is always ready to take on new challenges and create something amazing together.</p>
+    </section>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                const navLinks = document.getElementById('navLinks');
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
